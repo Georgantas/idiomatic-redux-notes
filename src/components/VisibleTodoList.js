@@ -1,37 +1,54 @@
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { toggleTodo } from '../actions';
+import { withRouter } from 'react-router';
+// import { toggleTodo, receiveTodos } from '../actions';
+import * as actions from '../actions';
+import { getVisibleTodos } from '../reducers';
 import TodoList from './TodoList';
 
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return todos;
-    case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed);
-    case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed);
-    default:
-      throw new Error(`Unknown filter: ${filter}.`);
+class VisibleTodoList extends Component {
+  fetchData(){
+    const { filter, fetchTodos } = this.props;
+    fetchTodos(filter);
   }
-};
 
-const mapStateToProps = (state) => {
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.filter !== prevProps.filter) { // acts as a cache
+      this.fetchData();
+    }
+  }
+
+  render() {
+    const { toggleTodo, ...rest } = this.props;
+    return <TodoList {...rest} onTodoClick={toggleTodo} />;
+  }
+}
+
+const mapStateToProps = (state, { params }) => {
+  const filter = params.filter || 'all';
   return {
-    todos: getVisibleTodos(state.todos, state.visibilityFilter),
+    todos: getVisibleTodos(state, filter),
+    filter,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onTodoClick: (id) => {
-      dispatch(toggleTodo(id));
-    },
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onTodoClick: (id) => {
+//       dispatch(toggleTodo(id));
+//     },
+//   };
+// };
 
-const VisibleTodoList = connect(
+VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  mapDispatchToProps
-)(TodoList);
+  actions
+  // mapDispatchToProps // using shorthand
+  // { onTodoClick: toggleTodo, receiveTodos }
+)(VisibleTodoList));
 
 export default VisibleTodoList;
