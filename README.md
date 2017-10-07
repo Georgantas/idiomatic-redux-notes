@@ -1,2 +1,2 @@
 # idiomatic-redux-notes
-Notes for egghead.io/courses/building-react-applications-with-idiomatic-redux.
+Notes for egghead.io/courses/building-react-applications-with-idiomatic-redux. For future reference.
