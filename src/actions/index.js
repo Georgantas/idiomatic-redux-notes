@@ -17,7 +17,7 @@ const receiveTodos = (filter, response) => ({
 // called a thunk
 export const fetchTodos = (filter) => (dispatch, getState) => {
   if(getIsFetching(getState(), filter)){ // recall: getisfetching is a selector
-    return;
+    return Promise.resolve();
   }
 
   dispatch(requestTodos(filter)); // dispatch becomes store.dispatch because of middleware
