@@ -1,5 +1,6 @@
 
 import { v4 } from 'node-uuid';
+import {getIsFetching } from '../reducers';
 import * as api from '../api';
 
 const requestTodos = (filter) => ({
@@ -14,7 +15,11 @@ const receiveTodos = (filter, response) => ({
 });
 
 // called a thunk
-export const fetchTodos = (filter) => (dispatch) => {
+export const fetchTodos = (filter) => (dispatch, getState) => {
+  if(getIsFetching(getState(), filter)){ // recall: getisfetching is a selector
+    return;
+  }
+
   dispatch(requestTodos(filter)); // dispatch becomes store.dispatch because of middleware
   
   return api.fetchTodos(filter).then(response => { 
