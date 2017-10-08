@@ -37,7 +37,7 @@ class VisibleTodoList extends Component {
 const mapStateToProps = (state, { params }) => {
   const filter = params.filter || 'all';
   return {
-    todos: getVisibleTodos(state, filter),
+    todos: getVisibleTodos(state, filter), // a selector, not a reducer
     isFetching: getIsFetching(state, filter),
     filter,
   };
