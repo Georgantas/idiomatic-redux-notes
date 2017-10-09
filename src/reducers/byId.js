@@ -14,6 +14,11 @@ const byId = (state = {}, action) => {
       //     ...state,
       //     [action.id]: todo(state[action.id], action),
       //   }
+      case 'ADD_TODO_SUCCESS':
+        return {
+          ...state,
+          [action.response.id]: action.response,
+        }
       default:
         return state;
     }
